@@ -115,11 +115,6 @@ input[type='checkbox'] {
   cursor: pointer;
   transition: 0.5s all;
 }
-@media (max-width: 768px) {
-  .outline-button {
-    font-size: 13px;
-  }
-}
 
 .outline-button:hover {
   color: #ffffff;

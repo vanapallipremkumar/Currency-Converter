@@ -6,11 +6,13 @@ import './App.css'
 
 // import local components
 import SignIn from './components/SignIn'
+import SignUp from './components/SignUp'
 
 const App = () => (
   <BrowserRouter>
     <Switch>
       <Route exact to="/sign-in" component={SignIn} />
+      <Route exact to="/sign-up" component={SignUp} />
     </Switch>
   </BrowserRouter>
 )

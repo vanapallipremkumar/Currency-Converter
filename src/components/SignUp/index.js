@@ -1,6 +1,6 @@
 // import third party packages
 import {Component} from 'react'
-import {Redirect, Link} from 'react-router-dom'
+import {Redirect} from 'react-router-dom'
 import Cookies from 'js-cookie'
 
 // import react icons
@@ -11,9 +11,7 @@ import {AiFillEye} from 'react-icons/ai'
 // import css
 import './index.css'
 
-const bcrypt = require('bcrypt')
-
-class SignIn extends Component {
+class SignUp extends Component {
   state = {
     username: '',
     emptyUsername: false,
@@ -137,22 +135,10 @@ class SignIn extends Component {
           <button className="sign-in-button" type="submit">
             Sign In
           </button>
-          <div className="sign-up-button-container">
-            <Link className="route-link" to="/sign-up">
-              <button className="outline-button" type="button">
-                Sign up
-              </button>
-            </Link>
-            <Link className="route-link" to="/sign-up">
-              <button className="outline-button" type="button">
-                Forgot Password
-              </button>
-            </Link>
-          </div>
         </form>
       </div>
     )
   }
 }
 
-export default SignIn
+export default SignUp
