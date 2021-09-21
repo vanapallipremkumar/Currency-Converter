@@ -10,7 +10,7 @@ input[type='checkbox'] {
   justify-content: center;
   align-items: center;
 }
-.form-container {
+.signup-form-container {
   width: 100%;
   max-width: 400px;
   padding: 24px;
@@ -21,7 +21,7 @@ input[type='checkbox'] {
   border-radius: 16px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-.sign-in-heading {
+.sign-up-heading {
   color: #3caea3;
   font-size: 30px;
   font-family: 'Roboto';
@@ -30,34 +30,38 @@ input[type='checkbox'] {
   margin-bottom: 32px;
 }
 @media (min-width: 768px) {
-  .sign-in-heading {
+  .sign-up-heading {
     font-size: 40px;
   }
 }
-
-.form-input-container {
+.signup-form-input-item-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 20px 0;
+}
+.signup-form-input-container {
   width: 100%;
   height: 45px;
   padding: 0 20px;
-  margin: 0 0 20px 0;
   display: flex;
   align-items: center;
   border-radius: 16px;
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
-.form-input-icon {
+.signup-form-input-icon {
   color: #0f172a;
   font-size: 24px;
   margin-right: 10px;
 }
-.form-input-field {
+.signup-form-input-field {
   width: 100%;
   color: #0f172a;
   border: none;
   outline: none;
   font-family: 'Roboto';
 }
-.form-input-container:focus-within {
+.signup-form-input-container:focus-within {
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -72,7 +76,7 @@ input[type='checkbox'] {
   font-size: 14px;
   font-family: 'Roboto';
 }
-.sign-in-button {
+.sign-up-button {
   width: 100%;
   height: 35px;
   color: #ffffff;
@@ -84,39 +88,17 @@ input[type='checkbox'] {
   cursor: pointer;
   border-radius: 16px;
 }
-.error-message {
+.signup-error-message {
   color: #ff0000;
   font-size: 12px;
   font-family: 'Roboto';
   align-self: flex-start;
-  margin: 10px 0 0 0;
+  margin: 2px 0 0 10px;
 }
-.sign-up-button-container {
+.loader-container {
   width: 100%;
+  height: 40px;
   display: flex;
-  justify-content: space-between;
-  margin: 20px 0 0 0;
-}
-.route-link {
-  width: 45%;
-  height: 35px;
-  border-radius: 16px;
-}
-.outline-button {
-  width: 100%;
-  height: 100%;
-  color: #3caea3;
-  font-family: 'Roboto';
-  font-weight: 500;
-  background-color: #ffffff;
-  border: 1.5px solid #3caea3;
-  border-radius: 16px;
-  outline: none;
-  cursor: pointer;
-  transition: 0.5s all;
-}
-
-.outline-button:hover {
-  color: #ffffff;
-  background-color: #3caea3;
+  justify-content: center;
+  align-items: flex-end;
 }

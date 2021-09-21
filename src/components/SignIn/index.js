@@ -11,7 +11,7 @@ import {AiFillEye} from 'react-icons/ai'
 // import css
 import './index.css'
 
-const bcrypt = require('bcrypt')
+// const bcrypt = require('bcryptjs')
 
 class SignIn extends Component {
   state = {
@@ -57,7 +57,11 @@ class SignIn extends Component {
       this.setState({emptyPassword: true})
     }
     if (username !== 'prem' || password !== 'prem') {
-      this.setState({invalidLogin: true})
+      this.setState({
+        emptyUsername: true,
+        emptyPassword: true,
+        invalidLogin: true,
+      })
     } else {
       this.setState({
         emptyUsername: false,
@@ -133,17 +137,19 @@ class SignIn extends Component {
             />
             <label htmlFor="showPassword">Show Password</label>
           </div>
-          {invalidLogin && <p className="error-message">* Invalid Login</p>}
+          {invalidLogin && (
+            <p className="error-message">*username or password did not match</p>
+          )}
           <button className="sign-in-button" type="submit">
             Sign In
           </button>
           <div className="sign-up-button-container">
-            <Link className="route-link" to="/sign-up">
+            <Link className="route-link" to="/signup">
               <button className="outline-button" type="button">
                 Sign up
               </button>
             </Link>
-            <Link className="route-link" to="/sign-up">
+            <Link className="route-link" to="/signup">
               <button className="outline-button" type="button">
                 Forgot Password
               </button>

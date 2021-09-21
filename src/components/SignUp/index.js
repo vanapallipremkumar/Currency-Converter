@@ -1,24 +1,33 @@
 // import third party packages
 import {Component} from 'react'
-import {Redirect} from 'react-router-dom'
-import Cookies from 'js-cookie'
 
 // import react icons
-import {FaUserCircle} from 'react-icons/fa'
+import {FaUserCircle, FaBirthdayCake} from 'react-icons/fa'
 import {BsFillShieldLockFill} from 'react-icons/bs'
 import {AiFillEye} from 'react-icons/ai'
 
 // import css
 import './index.css'
 
+const bcrypt = require('bcryptjs')
+
+const getTodayDate = () => {
+  const today = new Date()
+  const dd = today.getDate()
+  const mm = today.getMonth() + 1
+  const yyyy = today.getFullYear()
+  return `${yyyy}-${mm < 10 ? `0${mm}` : mm}-${dd < 10 ? `0${dd}` : dd}`
+}
+
 class SignUp extends Component {
   state = {
     username: '',
-    emptyUsername: false,
+    invalidUsernameMsg: '',
     password: '',
-    emptyPassword: false,
+    invalidPasswordMsg: '',
+    dateOfBirth: getTodayDate(),
     showPassword: false,
-    invalidLogin: false,
+    signUpHasDone: false,
   }
 
   onChangeUsername = event => {
@@ -26,11 +35,18 @@ class SignUp extends Component {
   }
 
   onBlurUsername = event => {
-    if (event.target.value === '') {
-      this.setState({emptyUsername: true})
-    } else {
-      this.setState({emptyUsername: false})
+    this.setState({username: event.target.value}, this.checkUserName)
+  }
+
+  checkUserName = () => {
+    const {username} = this.state
+    let invalidUsernameMsg = ''
+    if (username === '') {
+      invalidUsernameMsg = 'required'
+    } else if (username.length < 5) {
+      invalidUsernameMsg = 'username must be at least 5 characters'
     }
+    this.setState({invalidUsernameMsg})
   }
 
   onChangePassword = event => {
@@ -38,30 +54,68 @@ class SignUp extends Component {
   }
 
   onBlurPassword = event => {
-    if (event.target.value === '') {
-      this.setState({emptyPassword: true})
+    this.setState({password: event.target.value}, this.checkPassword)
+  }
+
+  checkPassword = () => {
+    const {password} = this.state
+    let invalidPasswordMsg = ''
+    if (password === '') {
+      invalidPasswordMsg = 'required'
+    } else if (password.length < 8) {
+      invalidPasswordMsg = 'password must be at least 8 characters'
+    }
+    this.setState({invalidPasswordMsg})
+  }
+
+  onChangeDateOfBirth = event => {
+    this.setState({dateOfBirth: event.target.value})
+  }
+
+  createUser = async () => {
+    const {username, password, dateOfBirth} = this.state
+    const encryptedPassword = await bcrypt.hash(password, 10)
+    const userDetails = {
+      username,
+      password: encryptedPassword,
+      dateOfBirth,
+    }
+    const existedUsers = localStorage.getItem('code_young_users')
+    if (existedUsers === null) {
+      const users = JSON.stringify([userDetails])
+      localStorage.setItem('code_young_users', users)
+      this.setState({signUpHasDone: true})
     } else {
-      this.setState({emptyPassword: false})
+      const users = JSON.parse(existedUsers)
+      const userExists = users.find(user => user.username === username)
+      if (userExists === undefined) {
+        const newUsersList = JSON.stringify([...users, userDetails])
+        this.setState({signUpHasDone: true})
+        localStorage.setItem('code_young_users', newUsersList)
+      } else {
+        this.setState({invalidUsernameMsg: 'username already exists'})
+      }
     }
   }
 
-  onClickSignIn = event => {
+  onClickSignUp = event => {
     event.preventDefault()
-    const {username, password} = this.state
-    if (username.trim() === '') {
-      this.setState({emptyUsername: true})
-    }
-    if (password === '') {
-      this.setState({emptyPassword: true})
-    }
-    if (username !== 'prem' || password !== 'prem') {
-      this.setState({invalidLogin: true})
+    const {
+      username,
+      password,
+      invalidUsernameMsg,
+      invalidPasswordMsg,
+    } = this.state
+    if (
+      invalidUsernameMsg === '' &&
+      invalidPasswordMsg === '' &&
+      username.trim() !== '' &&
+      password !== ''
+    ) {
+      this.createUser()
     } else {
-      this.setState({
-        emptyUsername: false,
-        emptyPassword: false,
-        invalidLogin: false,
-      })
+      this.checkUserName()
+      this.checkPassword()
     }
   }
 
@@ -71,29 +125,26 @@ class SignUp extends Component {
     }))
   }
 
-  render() {
-    if (Cookies.get('cy_jwt_token') !== undefined) {
-      return <Redirect to="" />
-    }
+  renderSignUpForm = () => {
     const {
       username,
-      emptyUsername,
+      invalidUsernameMsg,
       password,
-      emptyPassword,
+      invalidPasswordMsg,
+      dateOfBirth,
       showPassword,
-      invalidLogin,
     } = this.state
     return (
-      <div className="app-container">
-        <form className="form-container" onSubmit={this.onClickSignIn}>
-          <h1 className="sign-in-heading">Sign-In</h1>
-          <div className="form-input-container">
+      <form className="signup-form-container" onSubmit={this.onClickSignUp}>
+        <h1 className="sign-up-heading">Sign-Up</h1>
+        <div className="signup-form-input-item-container">
+          <div className="signup-form-input-container">
             <FaUserCircle
-              className="form-input-icon"
-              color={emptyUsername ? '#ff0000' : '#3caea3'}
+              className="signup-form-input-icon"
+              color={invalidUsernameMsg !== '' ? '#ff0000' : '#3caea3'}
             />
             <input
-              className="form-input-field"
+              className="signup-form-input-field"
               type="text"
               value={username}
               onChange={this.onChangeUsername}
@@ -101,20 +152,25 @@ class SignUp extends Component {
               placeholder="Username"
             />
           </div>
-          <div className="form-input-container">
+          {invalidUsernameMsg !== '' && (
+            <p className="signup-error-message">*{invalidUsernameMsg}</p>
+          )}
+        </div>
+        <div className="signup-form-input-item-container">
+          <div className="signup-form-input-container">
             {showPassword ? (
               <AiFillEye
-                className="form-input-icon"
-                color={emptyPassword ? '#ff0000' : '#3caea3'}
+                className="signup-form-input-icon"
+                color={invalidPasswordMsg !== '' ? '#ff0000' : '#3caea3'}
               />
             ) : (
               <BsFillShieldLockFill
-                className="form-input-icon"
-                color={emptyPassword ? '#ff0000' : '#3caea3'}
+                className="signup-form-input-icon"
+                color={invalidPasswordMsg !== '' ? '#ff0000' : '#3caea3'}
               />
             )}
             <input
-              className="form-input-field"
+              className="signup-form-input-field"
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={this.onChangePassword}
@@ -122,20 +178,48 @@ class SignUp extends Component {
               placeholder="Password"
             />
           </div>
-          <div className="checkbox-container">
-            <input
-              className="show-password-checkbox"
-              id="showPassword"
-              type="checkbox"
-              onChange={this.onChangeShowPassword}
+          {invalidPasswordMsg !== '' && (
+            <p className="signup-error-message">*{invalidPasswordMsg}</p>
+          )}
+        </div>
+        <div className="signup-form-input-item-container">
+          <div className="signup-form-input-container">
+            <FaBirthdayCake
+              className="signup-form-input-icon"
+              color="#3caea3"
             />
-            <label htmlFor="showPassword">Show Password</label>
+            <input
+              className="signup-form-input-field"
+              type="date"
+              value={dateOfBirth}
+              onChange={this.onChangeDateOfBirth}
+              max={getTodayDate()}
+            />
           </div>
-          {invalidLogin && <p className="error-message">* Invalid Login</p>}
+        </div>
+        <div className="checkbox-container">
+          <input
+            className="show-password-checkbox"
+            id="showPassword"
+            type="checkbox"
+            onChange={this.onChangeShowPassword}
+          />
+          <label htmlFor="showPassword">Show Password</label>
+        </div>
+        <div className="signup-form-input-item-container">
           <button className="sign-in-button" type="submit">
-            Sign In
+            Sign Up
           </button>
-        </form>
+        </div>
+      </form>
+    )
+  }
+
+  render() {
+    const {signUpHasDone} = this.state
+    return (
+      <div className="app-container">
+        {signUpHasDone ? null : this.renderSignUpForm()}
       </div>
     )
   }
