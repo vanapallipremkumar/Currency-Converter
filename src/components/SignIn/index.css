@@ -1,0 +1,91 @@
+input[type='checkbox'] {
+  zoom: 1.5;
+  margin-right: 5px;
+}
+
+.app-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.form-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 24px;
+  margin: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.sign-in-heading {
+  color: #0f172a;
+  font-size: 30px;
+  font-family: 'Bree Serif';
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 32px;
+}
+@media (min-width: 768px) {
+  .sign-in-heading {
+    font-size: 40px;
+  }
+}
+
+.form-input-container {
+  width: 100%;
+  height: 45px;
+  padding: 0 20px;
+  margin: 0 0 20px 0;
+  display: flex;
+  align-items: center;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+.form-input-icon {
+  color: #0f172a;
+  font-size: 24px;
+  margin-right: 10px;
+}
+.form-input-field {
+  width: 100%;
+  color: #0f172a;
+  border: none;
+  outline: none;
+  font-family: 'Roboto';
+}
+.form-input-container:focus-within {
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.form-input-container:focus-within .form-input-icon {
+  color: #3caea3;
+}
+
+.checkbox-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-label {
+  color: #0f172a;
+  font-size: 14px;
+  font-family: 'Roboto';
+}
+.sign-in-button {
+  width: 100%;
+  height: 35px;
+  font-size: 14px;
+  color: #ffffff;
+  background-color: ;
+  font-family: 'Roboto';
+  margin: 20px 0 0 0;
+}
+.error-message {
+  color: #ff0000;
+  font-size: 12px;
+  font-family: 'Roboto';
+}
