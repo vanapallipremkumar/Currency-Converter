@@ -29,9 +29,9 @@ class SignIn extends Component {
 
   onBlurUsername = event => {
     if (event.target.value === '') {
-      this.setState({emptyUsername: true, invalidLogin: true})
+      this.setState({emptyUsername: true, invalidLogin: false})
     } else {
-      this.setState({emptyUsername: false, invalidLogin: true})
+      this.setState({emptyUsername: false, invalidLogin: false})
     }
   }
 
@@ -41,9 +41,9 @@ class SignIn extends Component {
 
   onBlurPassword = event => {
     if (event.target.value === '') {
-      this.setState({emptyPassword: true, invalidLogin: true})
+      this.setState({emptyPassword: true, invalidLogin: false})
     } else {
-      this.setState({emptyPassword: false, invalidLogin: true})
+      this.setState({emptyPassword: false, invalidLogin: false})
     }
   }
 

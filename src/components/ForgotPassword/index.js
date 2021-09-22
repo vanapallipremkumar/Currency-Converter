@@ -79,7 +79,11 @@ class ForgotPassword extends Component {
           if (dateOfBirthMatched === false) {
             this.setState({invalidLoginDetails: 'Invalid details'})
           } else {
-            this.setState({invalidLoginDetails: '', validDetailsEntered: true})
+            this.setState({
+              invalidLoginDetails: '',
+              validDetailsEntered: true,
+              invalidUsernameMsg: '',
+            })
           }
         }
       }
