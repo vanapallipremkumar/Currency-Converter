@@ -1,5 +1,6 @@
 // import third party packages
 import {Component} from 'react'
+import bcrypt from 'bcryptjs'
 
 // import react icons
 import {FaUserCircle, FaBirthdayCake} from 'react-icons/fa'
@@ -9,8 +10,6 @@ import {AiFillEye} from 'react-icons/ai'
 // import css
 import './index.css'
 
-const bcrypt = require('bcryptjs')
-
 const getTodayDate = () => {
   const today = new Date()
   const dd = today.getDate()
@@ -18,13 +17,26 @@ const getTodayDate = () => {
   const yyyy = today.getFullYear()
   return `${yyyy}-${mm < 10 ? `0${mm}` : mm}-${dd < 10 ? `0${dd}` : dd}`
 }
+const bcryptSalt = 10
 
 class ForgotPassword extends Component {
   state = {
     username: '',
     invalidUsernameMsg: '',
     dateOfBirth: getTodayDate(),
+    invalidLoginDetails: '',
+    validDetailsEntered: false,
+    newPassword: '',
+    invalidPasswordMsg: '',
+    showPassword: false,
   }
+
+  returnToLoginPage = () => {
+    const {history} = this.props
+    history.replace('/signin')
+  }
+
+  getUsersData = () => localStorage.getItem('code_young_users')
 
   onChangeUsername = event => {
     this.setState({username: event.target.value})
@@ -39,8 +51,6 @@ class ForgotPassword extends Component {
     let invalidUsernameMsg = ''
     if (username === '') {
       invalidUsernameMsg = 'required'
-    } else if (username.length < 5) {
-      invalidUsernameMsg = 'username must be at least 5 characters'
     }
     this.setState({invalidUsernameMsg})
   }
@@ -49,92 +59,110 @@ class ForgotPassword extends Component {
     this.setState({dateOfBirth: event.target.value})
   }
 
-  returnToLoginPage = () => {
-    const {history} = this.props
-    history.replace('/signin')
-  }
-
-  onClickResetPassword = event => {
+  onCheckingDetails = async event => {
     event.preventDefault()
+    const {username, dateOfBirth} = this.state
+    if (username !== '') {
+      const data = this.getUsersData()
+      if (data === null) {
+        this.setState({invalidLoginDetails: 'Invalid details'})
+      } else {
+        const usersList = JSON.parse(data)
+        const userDetails = usersList.find(user => user.username === username)
+        if (userDetails === undefined) {
+          this.setState({invalidLoginDetails: 'Invalid details'})
+        } else {
+          const dateOfBirthMatched = await bcrypt.compare(
+            dateOfBirth,
+            userDetails.dateOfBirth,
+          )
+          if (dateOfBirthMatched === false) {
+            this.setState({invalidLoginDetails: 'Invalid details'})
+          } else {
+            this.setState({invalidLoginDetails: '', validDetailsEntered: true})
+          }
+        }
+      }
+    } else {
+      this.checkUserName()
+    }
   }
 
-  passwordCode = () => {
-    const showPassword = false
-    const password = ''
-    const invalidPasswordMsg = ''
-    return (
-      <div className="forgot-password-form-input-item-container">
-        <div className="forgot-password-form-input-container">
-          {showPassword ? (
-            <AiFillEye
-              className="forgot-password-form-input-icon"
-              color={invalidPasswordMsg !== '' ? '#ff0000' : '#3caea3'}
-            />
-          ) : (
-            <BsFillShieldLockFill
-              className="forgot-password-form-input-icon"
-              color={invalidPasswordMsg !== '' ? '#ff0000' : '#3caea3'}
-            />
-          )}
-          <input
-            className="forgot-password-form-input-field"
-            type={showPassword ? 'text' : 'password'}
-            value={password}
-            onChange={this.onChangePassword}
-            onBlur={this.onBlurPassword}
-            placeholder="Password"
-          />
-        </div>
-        {invalidPasswordMsg !== '' && (
-          <p className="forgot-password-error-message">*{invalidPasswordMsg}</p>
-        )}
-      </div>
-    )
+  onChangePassword = event => {
+    this.setState({newPassword: event.target.value})
   }
 
-  renderSignUpForm = () => {
-    const {username, invalidUsernameMsg, dateOfBirth} = this.state
+  onBlurPassword = event => {
+    this.setState({newPassword: event.target.value}, this.checkPassword)
+  }
+
+  checkPassword = () => {
+    const {newPassword} = this.state
+    let invalidPasswordMsg = ''
+    if (newPassword === '') {
+      invalidPasswordMsg = 'required'
+    } else if (newPassword.length < 8) {
+      invalidPasswordMsg = 'password must be at least 8 characters'
+    }
+    this.setState({invalidPasswordMsg})
+  }
+
+  onChangeShowPassword = () => {
+    this.setState(previousState => ({
+      showPassword: !previousState.showPassword,
+    }))
+  }
+
+  resetPassword = async event => {
+    event.preventDefault()
+    const {username, newPassword, invalidPasswordMsg} = this.state
+    if (invalidPasswordMsg === '') {
+      const data = this.getUsersData()
+      const usersList = JSON.parse(data)
+      const userDetails = usersList.find(user => user.username === username)
+      const encryptedPassword = await bcrypt.hash(newPassword, bcryptSalt)
+      const newUserDetails = {...userDetails, password: encryptedPassword}
+      const newUsersList = usersList.map(user =>
+        user.username === username ? newUserDetails : user,
+      )
+      localStorage.setItem('code_young_users', JSON.stringify(newUsersList))
+      this.returnToLoginPage()
+    } else {
+      this.checkPassword()
+    }
+  }
+
+  renderPasswordInput = () => {
+    const {newPassword, invalidPasswordMsg, showPassword} = this.state
     return (
-      <form
-        className="forgot-password-form-container"
-        onSubmit={this.onClickResetPassword}
-      >
-        <h1 className="forgot-password-heading">Forgot Password</h1>
+      <>
         <div className="forgot-password-form-input-item-container">
           <div className="forgot-password-form-input-container">
-            <FaUserCircle
-              className="forgot-password-form-input-icon"
-              color={invalidUsernameMsg !== '' ? '#ff0000' : '#3caea3'}
-            />
+            {showPassword ? (
+              <AiFillEye
+                className="forgot-password-form-input-icon"
+                color={invalidPasswordMsg !== '' ? '#ff0000' : '#3caea3'}
+              />
+            ) : (
+              <BsFillShieldLockFill
+                className="forgot-password-form-input-icon"
+                color={invalidPasswordMsg !== '' ? '#ff0000' : '#3caea3'}
+              />
+            )}
             <input
               className="forgot-password-form-input-field"
-              type="text"
-              value={username}
-              onChange={this.onChangeUsername}
-              onBlur={this.onBlurUsername}
-              placeholder="Username"
+              type={showPassword ? 'text' : 'password'}
+              value={newPassword}
+              onChange={this.onChangePassword}
+              onBlur={this.onBlurPassword}
+              placeholder="Password"
             />
           </div>
-          {invalidUsernameMsg !== '' && (
+          {invalidPasswordMsg !== '' && (
             <p className="forgot-password-error-message">
-              *{invalidUsernameMsg}
+              *{invalidPasswordMsg}
             </p>
           )}
-        </div>
-        <div className="forgot-password-form-input-item-container">
-          <div className="forgot-password-form-input-container">
-            <FaBirthdayCake
-              className="forgot-password-form-input-icon"
-              color="#3caea3"
-            />
-            <input
-              className="forgot-password-form-input-field"
-              type="date"
-              value={dateOfBirth}
-              onChange={this.onChangeDateOfBirth}
-              max={getTodayDate()}
-            />
-          </div>
         </div>
         <div className="checkbox-container">
           <input
@@ -145,17 +173,89 @@ class ForgotPassword extends Component {
           />
           <label htmlFor="showPassword">Show Password</label>
         </div>
-        <div className="forgot-password-form-input-item-container">
-          <button className="forgot-password-button" type="submit">
-            Reset Password
-          </button>
-        </div>
-      </form>
+      </>
     )
   }
 
   render() {
-    return <div className="app-container">{this.renderSignUpForm()}</div>
+    const {
+      username,
+      invalidUsernameMsg,
+      dateOfBirth,
+      invalidLoginDetails,
+      validDetailsEntered,
+    } = this.state
+    return (
+      <div className="app-container">
+        <form
+          className="forgot-password-form-container"
+          onSubmit={
+            validDetailsEntered ? this.resetPassword : this.onCheckingDetails
+          }
+        >
+          <h1 className="forgot-password-heading">Forgot Password</h1>
+          <div className="forgot-password-form-input-item-container">
+            <div className="forgot-password-form-input-container">
+              <FaUserCircle
+                className="forgot-password-form-input-icon"
+                color={
+                  invalidUsernameMsg !== '' || invalidLoginDetails !== ''
+                    ? '#ff0000'
+                    : '#3caea3'
+                }
+              />
+              <input
+                className="forgot-password-form-input-field"
+                type="text"
+                value={username}
+                onChange={this.onChangeUsername}
+                onBlur={this.onBlurUsername}
+                placeholder="Username"
+                disabled={validDetailsEntered}
+              />
+            </div>
+            {invalidUsernameMsg !== '' && (
+              <p className="forgot-password-error-message">
+                *{invalidUsernameMsg}
+              </p>
+            )}
+          </div>
+          <div className="forgot-password-form-input-item-container">
+            <div className="forgot-password-form-input-container">
+              <FaBirthdayCake
+                className="forgot-password-form-input-icon"
+                color={invalidLoginDetails !== '' ? '#ff0000' : '#3caea3'}
+              />
+              <input
+                className="forgot-password-form-input-field"
+                type="date"
+                value={dateOfBirth}
+                onChange={this.onChangeDateOfBirth}
+                max={getTodayDate()}
+                disabled={validDetailsEntered}
+              />
+            </div>
+          </div>
+          {invalidLoginDetails !== '' && (
+            <p className="forgot-password-error-message">
+              * {invalidLoginDetails}
+            </p>
+          )}
+          {validDetailsEntered && this.renderPasswordInput()}
+          <div className="forgot-password-form-input-item-container">
+            {validDetailsEntered ? (
+              <button className="forgot-password-button" type="submit">
+                Reset Password
+              </button>
+            ) : (
+              <button className="forgot-password-button" type="submit">
+                Check Details
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
+    )
   }
 }
 
