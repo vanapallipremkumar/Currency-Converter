@@ -18,6 +18,7 @@ const getTodayDate = () => {
   const yyyy = today.getFullYear()
   return `${yyyy}-${mm < 10 ? `0${mm}` : mm}-${dd < 10 ? `0${dd}` : dd}`
 }
+const bcryptSalt = 10
 
 class SignUp extends Component {
   state = {
@@ -27,7 +28,6 @@ class SignUp extends Component {
     invalidPasswordMsg: '',
     dateOfBirth: getTodayDate(),
     showPassword: false,
-    signUpHasDone: false,
   }
 
   onChangeUsername = event => {
@@ -72,26 +72,32 @@ class SignUp extends Component {
     this.setState({dateOfBirth: event.target.value})
   }
 
+  returnToLoginPage = () => {
+    const {history} = this.props
+    history.replace('/signin')
+  }
+
   createUser = async () => {
     const {username, password, dateOfBirth} = this.state
-    const encryptedPassword = await bcrypt.hash(password, 10)
+    const encryptedPassword = await bcrypt.hash(password, bcryptSalt)
+    const encryptedDateOfBirth = await bcrypt.hash(dateOfBirth, bcryptSalt)
     const userDetails = {
       username,
       password: encryptedPassword,
-      dateOfBirth,
+      dateOfBirth: encryptedDateOfBirth,
     }
     const existedUsers = localStorage.getItem('code_young_users')
     if (existedUsers === null) {
       const users = JSON.stringify([userDetails])
       localStorage.setItem('code_young_users', users)
-      this.setState({signUpHasDone: true})
+      this.returnToLoginPage()
     } else {
       const users = JSON.parse(existedUsers)
       const userExists = users.find(user => user.username === username)
       if (userExists === undefined) {
         const newUsersList = JSON.stringify([...users, userDetails])
-        this.setState({signUpHasDone: true})
         localStorage.setItem('code_young_users', newUsersList)
+        this.returnToLoginPage()
       } else {
         this.setState({invalidUsernameMsg: 'username already exists'})
       }
@@ -207,7 +213,7 @@ class SignUp extends Component {
           <label htmlFor="showPassword">Show Password</label>
         </div>
         <div className="signup-form-input-item-container">
-          <button className="sign-in-button" type="submit">
+          <button className="sign-up-button" type="submit">
             Sign Up
           </button>
         </div>
@@ -216,12 +222,7 @@ class SignUp extends Component {
   }
 
   render() {
-    const {signUpHasDone} = this.state
-    return (
-      <div className="app-container">
-        {signUpHasDone ? null : this.renderSignUpForm()}
-      </div>
-    )
+    return <div className="app-container">{this.renderSignUpForm()}</div>
   }
 }
 

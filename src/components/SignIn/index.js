@@ -2,6 +2,8 @@
 import {Component} from 'react'
 import {Redirect, Link} from 'react-router-dom'
 import Cookies from 'js-cookie'
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcryptjs'
 
 // import react icons
 import {FaUserCircle} from 'react-icons/fa'
@@ -10,8 +12,6 @@ import {AiFillEye} from 'react-icons/ai'
 
 // import css
 import './index.css'
-
-// const bcrypt = require('bcryptjs')
 
 class SignIn extends Component {
   state = {
@@ -29,9 +29,9 @@ class SignIn extends Component {
 
   onBlurUsername = event => {
     if (event.target.value === '') {
-      this.setState({emptyUsername: true})
+      this.setState({emptyUsername: true, invalidLogin: true})
     } else {
-      this.setState({emptyUsername: false})
+      this.setState({emptyUsername: false, invalidLogin: true})
     }
   }
 
@@ -41,13 +41,49 @@ class SignIn extends Component {
 
   onBlurPassword = event => {
     if (event.target.value === '') {
-      this.setState({emptyPassword: true})
+      this.setState({emptyPassword: true, invalidLogin: true})
     } else {
-      this.setState({emptyPassword: false})
+      this.setState({emptyPassword: false, invalidLogin: true})
     }
   }
 
-  onClickSignIn = event => {
+  makeAllErrorsSame = value => {
+    this.setState({
+      emptyUsername: value,
+      emptyPassword: value,
+      invalidLogin: value,
+    })
+  }
+
+  checkUserExists = async () => {
+    const {username, password} = this.state
+    const localData = localStorage.getItem('code_young_users')
+    if (localData === null) {
+      return false
+    }
+    const usersList = JSON.parse(localData)
+    const userDetailsWithUsername = usersList.find(
+      user => user.username === username,
+    )
+    if (userDetailsWithUsername === undefined) {
+      return false
+    }
+    const passwordMatched = await bcrypt.compare(
+      password,
+      userDetailsWithUsername.password,
+    )
+    return passwordMatched
+  }
+
+  generateJwtToken = () => {
+    const {username} = this.state
+    const cyJwtToken = jwt.sign({username}, 'CODEYOUNGSERCRETCODE')
+    Cookies.set('cy_jwt_token', cyJwtToken, {expires: 30})
+    const {history} = this.props
+    history.replace('/')
+  }
+
+  onClickSignIn = async event => {
     event.preventDefault()
     const {username, password} = this.state
     if (username.trim() === '') {
@@ -56,18 +92,18 @@ class SignIn extends Component {
     if (password === '') {
       this.setState({emptyPassword: true})
     }
-    if (username !== 'prem' || password !== 'prem') {
-      this.setState({
-        emptyUsername: true,
-        emptyPassword: true,
-        invalidLogin: true,
-      })
+    if (username === '' || password === '') {
+      this.makeAllErrorsSame(true)
     } else {
-      this.setState({
-        emptyUsername: false,
-        emptyPassword: false,
-        invalidLogin: false,
-      })
+      const validUserLogin = await this.checkUserExists()
+      if (validUserLogin) {
+        this.setState(
+          {emptyUsername: false, emptyPassword: false, invalidLogin: false},
+          this.generateJwtToken,
+        )
+      } else {
+        this.makeAllErrorsSame(true)
+      }
     }
   }
 
@@ -149,7 +185,7 @@ class SignIn extends Component {
                 Sign up
               </button>
             </Link>
-            <Link className="route-link" to="/signup">
+            <Link className="route-link" to="/forgot-password">
               <button className="outline-button" type="button">
                 Forgot Password
               </button>

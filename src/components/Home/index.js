@@ -5,7 +5,16 @@ const Home = props => {
     const {history} = props
     history.replace('/signin')
   }
-  return <h1>Home</h1>
+  const onclicksignout = () => {
+    Cookies.remove('cy_jwt_token')
+    const {history} = props
+    history.replace('/signin')
+  }
+  return (
+    <button type="button" onClick={onclicksignout}>
+      Logout
+    </button>
+  )
 }
 
 export default Home
