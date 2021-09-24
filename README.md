@@ -48,7 +48,7 @@ My Website Link: https://vpremcurrency.ccbp.tech/
 	iii) If you provide valid details, a password input will appear and then you can change your password.
 	iv) Once you change the password, you will be redirected to the sign in Route.
 
-### Home Route
+## Home Route
 **NOTE 2:** If you did not log in and use the home route path to enter, the Route will redirect to the login Route itself.
 
 	i)   Initially Route will be loaded with all the 160 country's currencies according to 1 UAE Dirham.
