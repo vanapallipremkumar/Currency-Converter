@@ -129,3 +129,9 @@ input[type='checkbox'] {
   color: #ffffff;
   background-color: #3caea3;
 }
+
+.google-sign-in-button {
+  width: 100%;
+  margin: 20px 0 0 0;
+  border-radius: 10px;
+}

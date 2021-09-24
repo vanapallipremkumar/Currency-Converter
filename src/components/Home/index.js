@@ -3,7 +3,6 @@ import Cookies from 'js-cookie'
 import Loader from 'react-loader-spinner'
 import 'react-loader-spinner/dist/loader/ThreeDots'
 import {BiError} from 'react-icons/bi'
-import jwt from 'jsonwebtoken'
 
 import CountryItem from '../CountryItem'
 import SelectCountries from '../SelectCountries'
@@ -29,10 +28,6 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    /* As per the react life cycle we can run componentDidMount only once.
-    So, instead of checking on each rendering, I'm executing this function here
-     */
-    this.checkJwtTokenUser()
     this.loadData()
   }
 
@@ -221,30 +216,12 @@ class Home extends Component {
     )
   }
 
-  checkJwtTokenUser = () => {
-    const cyJwtToken = Cookies.get('cy_jwt_token')
-    const userFound = jwt.verify(
-      cyJwtToken,
-      'CODEYOUNGSERCRETCODE',
-      (error, payload) => {
-        if (error) {
-          return false
-        }
-        const {username} = payload
-        const usersData = localStorage.getItem('code_young_users')
-        const usersList = JSON.parse(usersData)
-        const userExists = usersList.find(user => user.username === username)
-        return userExists !== undefined
-      },
-    )
-    if (userFound === false) {
-      Cookies.remove('cy_jwt_token')
+  render() {
+    if (Cookies.get('cy_jwt_token') === undefined) {
       const {history} = this.props
       history.replace('/signin')
     }
-  }
 
-  render() {
     const {amount} = this.state
     // JSX
     return (

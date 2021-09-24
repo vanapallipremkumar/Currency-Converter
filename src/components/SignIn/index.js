@@ -5,6 +5,8 @@ import Cookies from 'js-cookie'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 
+import GoogleLogin from 'react-google-login'
+
 // import react icons
 import {FaUserCircle} from 'react-icons/fa'
 import {BsFillShieldLockFill} from 'react-icons/bs'
@@ -21,6 +23,12 @@ class SignIn extends Component {
     emptyPassword: false,
     showPassword: false,
     invalidLogin: false,
+  }
+
+  setCookieAndRedirect = cyJwtToken => {
+    Cookies.set('cy_jwt_token', cyJwtToken, {expires: 30})
+    const {history} = this.props
+    history.replace('/')
   }
 
   onChangeUsername = event => {
@@ -78,9 +86,7 @@ class SignIn extends Component {
   generateJwtToken = () => {
     const {username} = this.state
     const cyJwtToken = jwt.sign({username}, 'CODEYOUNGSERCRETCODE')
-    Cookies.set('cy_jwt_token', cyJwtToken, {expires: 30})
-    const {history} = this.props
-    history.replace('/')
+    this.setCookieAndRedirect(cyJwtToken)
   }
 
   onClickSignIn = async event => {
@@ -111,6 +117,12 @@ class SignIn extends Component {
     this.setState(previousState => ({
       showPassword: !previousState.showPassword,
     }))
+  }
+
+  responseGoogle = response => {
+    const {tokenObj} = response
+    const idToken = tokenObj.id_token
+    this.setCookieAndRedirect(idToken)
   }
 
   render() {
@@ -192,6 +204,13 @@ class SignIn extends Component {
               </button>
             </Link>
           </div>
+          <GoogleLogin
+            className="google-sign-in-button"
+            clientId="831074996654-47vh0tssqrn99sc8bbii0c77vjr3db2j.apps.googleusercontent.com"
+            buttonText="Sign in with Google"
+            onSuccess={this.responseGoogle}
+            cookiePolicy="single_host_origin"
+          />
         </form>
       </div>
     )
