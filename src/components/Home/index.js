@@ -20,16 +20,39 @@ class Home extends Component {
     convertFromCountry: countries[0].countryCode,
     convertToCountry: 'all',
     amount: 1,
-    pageStatus: status.loading,
-    countriesAmounts: [],
+    pageStatus: status.success,
+    countriesAmounts: [
+      {
+        amount: 100,
+        countryCode: 'AED',
+      },
+      {
+        amount: 100,
+        countryCode: 'AED',
+      },
+      {
+        amount: 100,
+        countryCode: 'AED',
+      },
+      {
+        amount: 100,
+        countryCode: 'AED',
+      },
+      {
+        amount: 100,
+        countryCode: 'AED',
+      },
+    ],
+    apiKey: 'd2e6d93cfd1f547eb5b8b2cd',
+    searchValue: '',
   }
 
   componentDidMount() {
-    this.loadData()
+    // this.loadData()
   }
 
   getApiUrl = () => {
-    const apiKey = 'd2e6d93cfd1f547eb5b8b2cd'
+    const {apiKey} = this.state
     const {convertFromCountry, convertToCountry} = this.state
     if (convertToCountry !== 'all') {
       return `https://v6.exchangerate-api.com/v6/${apiKey}/pair/EUR/GBP`
@@ -44,8 +67,8 @@ class Home extends Component {
     if (convertToCountry !== 'all') {
       newData = [
         {
-          conversionRate: data.conversion_rate * amount,
-          targetCountryCode: data.target_code,
+          amount: data.conversion_rate * amount,
+          countryCode: data.target_code,
         },
       ]
     } else {
@@ -54,8 +77,8 @@ class Home extends Component {
         const {countryCode} = country
         const rate = conversionRates[countryCode]
         return {
-          conversionRate: rate * amount,
-          targetCountryCode: countryCode,
+          amount: rate * amount,
+          countryCode,
         }
       })
     }
@@ -115,22 +138,95 @@ class Home extends Component {
   }
 
   renderLoadingPage = () => (
-    <div className="result-container loading-or-failed">
+    <div className="loading-or-failed">
       <Loader type="ThreeDots" color="#008080" />
     </div>
   )
 
   renderFailedPage = () => (
-    <div className="result-container loading-or-failed">
+    <div className="loading-or-failed">
       <BiError color="#ff0000aa" size="80" />
       <h1 className="failed-message">Something went wrong</h1>
       <p className="failed-message-description">
-        Try after changing the api-key
+        Please check you internet connection and api-key
       </p>
     </div>
   )
 
-  renderCountryAmounts = () => null
+  onChangeApiKey = event => {
+    this.setState({apiKey: event.target.value})
+  }
+
+  renderApiKeyChanger = () => {
+    const {apiKey} = this.state
+    return (
+      <div className="api-key-container">
+        <div className="label-link-container">
+          <label className="api-key-label" htmlFor="apiKey">
+            Api Key
+          </label>
+          <a
+            className="anchor-link"
+            href="https://www.exchangerate-api.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Get Free Api Key
+          </a>
+        </div>
+        <input
+          className="api-key-input"
+          id="apiKey"
+          type="password"
+          value={apiKey}
+          onChange={this.onChangeApiKey}
+          placeholder="Enter api key"
+        />
+      </div>
+    )
+  }
+
+  onChangeSearchInput = event => {
+    this.setState({searchValue: event.target.value})
+  }
+
+  renderSearchBar = () => {
+    const {searchValue} = this.state
+    return (
+      <input
+        className="search-bar"
+        type="search"
+        value={searchValue}
+        onChange={this.onChangeSearchInput}
+        placeholder="Enter search value"
+      />
+    )
+  }
+
+  onClickLogout = () => {
+    Cookies.remove('cy_jwt_token')
+    const {history} = this.props
+    history.replace('/signin')
+  }
+
+  renderCountryAmounts = () => {
+    const {countriesAmounts} = this.state
+    const showSearchBar = countriesAmounts.length !== 1
+    return (
+      <div className="success-page-container">
+        <button
+          className="large-device-logout-button"
+          type="button"
+          onClick={this.onClickLogout}
+        >
+          Logout
+        </button>
+        {this.renderApiKeyChanger()}
+        {showSearchBar && this.renderSearchBar()}
+        <ul className="countries-amounts-container">prem</ul>
+      </div>
+    )
+  }
 
   render() {
     const {amount} = this.state
@@ -148,6 +244,7 @@ class Home extends Component {
           onChangeToCountry={this.onChangeToCountry}
           onChangeAmount={this.onChangeAmount}
           onClickConvert={this.onClickConvert}
+          onClickLogout={this.onClickLogout}
         />
         {this.renderCountriesAmountsPage()}
       </div>

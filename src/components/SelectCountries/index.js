@@ -8,9 +8,17 @@ const Countries = props => {
     onChangeToCountry,
     onChangeAmount,
     onClickConvert,
+    onClickLogout,
   } = props
   return (
     <div className="options-selector-container">
+      <button
+        className="small-device-logout-button"
+        type="button"
+        onClick={onClickLogout}
+      >
+        Logout
+      </button>
       <h1 className="page-heading">Currency Converter</h1>
 
       <div className="inputs-container">

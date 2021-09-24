@@ -3,6 +3,8 @@
   padding: 30px 20px;
   background-color: #3caea3;
   box-shadow: 5px 0 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
 }
 @media (min-width: 768px) {
   .options-selector-container {
@@ -38,8 +40,8 @@
   width: 100%;
   height: 35px;
   border-radius: 6px;
+  color: #008080;
   background-color: #f4f5ff;
-  color: #3caea3;
   font-size: 14px;
   font-family: 'Roboto';
   padding: 0 10px;
@@ -50,6 +52,7 @@
 .amount-input {
   width: 100%;
   height: 35px;
+  color: #008080;
   border: none;
   outline: none;
   border-radius: 6px;
@@ -67,4 +70,24 @@
   outline: none;
   cursor: pointer;
   margin: 6px 0 0 0;
+}
+.small-device-logout-button {
+  width: 100px;
+  height: 30px;
+  font-size: 14px;
+  font-weight: bold;
+  font-family: 'Roboto';
+  align-self: flex-end;
+  margin: 0 0 10px 0;
+  color: #ffffff;
+  background-color: #008080;
+  border: none;
+  outline: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+@media (min-width: 768px) {
+  .small-device-logout-button {
+    display: none;
+  }
 }

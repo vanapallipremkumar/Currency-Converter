@@ -1,3 +1,6 @@
+::placeholder {
+  color: #ffffffaa;
+}
 .home-page-container {
   width: 100%;
   min-width: 300px;
@@ -11,31 +14,131 @@
     overflow: auto;
   }
 }
-.result-container {
+.success-page-container {
   width: 100%;
   height: 50%;
   padding: 20px;
   display: flex;
+  flex-direction: column;
 }
 @media (min-width: 768px) {
-  .result-container {
+  .success-page-container {
     height: 100%;
-    overflow: auto;
   }
 }
 
 .loading-or-failed {
+  width: 100%;
+  height: 50%;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
+@media (min-width: 768px) {
+  .loading-or-failed {
+    height: 100%;
+    overflow: auto;
+  }
+}
 .failed-message {
+  text-align: center;
   color: #ff0000aa;
   font-size: 28px;
   font-family: 'Roboto';
 }
 .failed-message-description {
+  text-align: center;
   color: #ff0000aa;
-  font-size: 14px;
+  font-size: 16px;
   font-family: 'Roboto';
+  margin-top: 6px;
+}
+.api-key-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.large-device-logout-button {
+  width: 100px;
+  font-weight: bold;
+  font-family: 'Roboto';
+  align-self: flex-end;
+  padding: 6px 0;
+  margin: 0 0 20px 0;
+  color: #ffffff;
+  background-color: #008080;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+@media (max-width: 767px) {
+  .large-device-logout-button {
+    display: none;
+  }
+}
+
+.label-link-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 6px 0;
+  align-items: center;
+}
+
+.api-key-label {
+  font-size: 16px;
+  font-family: 'Roboto';
+  color: #008080;
+  margin-bottom: 10px;
+}
+.anchor-link {
+  color: #ffffff;
+  background-color: #008080;
+  font-size: 14px;
+  font-weight: bold;
+  font-family: 'Roboto';
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+.api-key-input {
+  width: 100%;
+  height: 35px;
+  padding: 6px 20px;
+  border: none;
+  outline: none;
+  background-color: #008080;
+  color: #ffffff;
+  font-family: 'Roboto';
+  border-radius: 6px;
+}
+.search-bar {
+  width: 100%;
+  height: 35px;
+  color: #ffffff;
+  background-color: #008080;
+  font-family: 'Roboto';
+  padding: 6px 20px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+}
+.countries-amounts-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .countries-amounts-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
 }
