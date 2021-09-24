@@ -117,6 +117,7 @@ class SignIn extends Component {
     if (Cookies.get('cy_jwt_token') !== undefined) {
       return <Redirect to="" />
     }
+
     const {
       username,
       emptyUsername,

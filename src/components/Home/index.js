@@ -3,7 +3,9 @@ import Cookies from 'js-cookie'
 import Loader from 'react-loader-spinner'
 import 'react-loader-spinner/dist/loader/ThreeDots'
 import {BiError} from 'react-icons/bi'
+import jwt from 'jsonwebtoken'
 
+import CountryItem from '../CountryItem'
 import SelectCountries from '../SelectCountries'
 
 import countries from '../../countries'
@@ -21,54 +23,37 @@ class Home extends Component {
     convertToCountry: 'all',
     amount: 1,
     pageStatus: status.success,
-    countriesAmounts: [
-      {
-        amount: 100,
-        countryCode: 'AED',
-      },
-      {
-        amount: 100,
-        countryCode: 'AED',
-      },
-      {
-        amount: 100,
-        countryCode: 'AED',
-      },
-      {
-        amount: 100,
-        countryCode: 'AED',
-      },
-      {
-        amount: 100,
-        countryCode: 'AED',
-      },
-    ],
+    countriesAmounts: [],
     apiKey: 'd2e6d93cfd1f547eb5b8b2cd',
     searchValue: '',
   }
 
   componentDidMount() {
-    // this.loadData()
+    /* As per the react life cycle we can run componentDidMount only once.
+    So, instead of checking on each rendering, I'm executing this function here
+     */
+    this.checkJwtTokenUser()
+    this.loadData()
   }
 
   getApiUrl = () => {
     const {apiKey} = this.state
     const {convertFromCountry, convertToCountry} = this.state
     if (convertToCountry !== 'all') {
-      return `https://v6.exchangerate-api.com/v6/${apiKey}/pair/EUR/GBP`
+      return `https://v6.exchangerate-api.com/v6/${apiKey}/pair/${convertFromCountry}/${convertToCountry}`
     }
     return `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${convertFromCountry}`
   }
 
   onSuccessfulFetch = data => {
-    this.setState({pageStatus: status.success})
     const {convertToCountry, amount} = this.state
     let newData
     if (convertToCountry !== 'all') {
+      const toCountryDetails = this.getCountryDetailsByCode(convertToCountry)
       newData = [
         {
-          amount: data.conversion_rate * amount,
-          countryCode: data.target_code,
+          ...toCountryDetails,
+          amount: (data.conversion_rate * amount).toFixed(2),
         },
       ]
     } else {
@@ -77,17 +62,16 @@ class Home extends Component {
         const {countryCode} = country
         const rate = conversionRates[countryCode]
         return {
-          amount: rate * amount,
-          countryCode,
+          ...country,
+          amount: (rate * amount).toFixed(2),
         }
       })
     }
-    console.log(newData)
+    this.setState({pageStatus: status.success, countriesAmounts: newData})
   }
 
   loadData = async () => {
     const apiUrl = this.getApiUrl()
-    console.log(apiUrl)
     const options = {method: 'GET'}
     const response = await fetch(apiUrl, options)
     if (response.ok) {
@@ -210,31 +194,58 @@ class Home extends Component {
   }
 
   renderCountryAmounts = () => {
-    const {countriesAmounts} = this.state
+    const {countriesAmounts, searchValue} = this.state
     const showSearchBar = countriesAmounts.length !== 1
+    const lowerCaseSearchValue = searchValue.toLowerCase()
+    const filteredCountries = countriesAmounts.filter(country => {
+      const {countryCode, currencyName, countryName, amount} = country
+      const matched =
+        countryCode.toLowerCase().includes(lowerCaseSearchValue) ||
+        countryName.toLowerCase().includes(lowerCaseSearchValue) ||
+        currencyName.toLowerCase().includes(lowerCaseSearchValue) ||
+        amount.toString().includes(lowerCaseSearchValue)
+      return matched
+    })
     return (
       <div className="success-page-container">
-        <button
-          className="large-device-logout-button"
-          type="button"
-          onClick={this.onClickLogout}
-        >
-          Logout
-        </button>
-        {this.renderApiKeyChanger()}
         {showSearchBar && this.renderSearchBar()}
-        <ul className="countries-amounts-container">prem</ul>
+        <ul className="countries-amounts-container">
+          {filteredCountries.map(countryDetails => (
+            <CountryItem
+              countryDetails={countryDetails}
+              key={countryDetails.countryCode}
+            />
+          ))}
+        </ul>
       </div>
     )
   }
 
-  render() {
-    const {amount} = this.state
-    if (Cookies.get('cy_jwt_token') === undefined) {
+  checkJwtTokenUser = () => {
+    const cyJwtToken = Cookies.get('cy_jwt_token')
+    const userFound = jwt.verify(
+      cyJwtToken,
+      'CODEYOUNGSERCRETCODE',
+      (error, payload) => {
+        if (error) {
+          return false
+        }
+        const {username} = payload
+        const usersData = localStorage.getItem('code_young_users')
+        const usersList = JSON.parse(usersData)
+        const userExists = usersList.find(user => user.username === username)
+        return userExists !== undefined
+      },
+    )
+    if (userFound === false) {
+      Cookies.remove('cy_jwt_token')
       const {history} = this.props
       history.replace('/signin')
     }
+  }
 
+  render() {
+    const {amount} = this.state
     // JSX
     return (
       <div className="home-page-container">
@@ -246,7 +257,17 @@ class Home extends Component {
           onClickConvert={this.onClickConvert}
           onClickLogout={this.onClickLogout}
         />
-        {this.renderCountriesAmountsPage()}
+        <div className="api-input-result-container">
+          <button
+            className="large-device-logout-button"
+            type="button"
+            onClick={this.onClickLogout}
+          >
+            Logout
+          </button>
+          {this.renderApiKeyChanger()}
+          {this.renderCountriesAmountsPage()}
+        </div>
       </div>
     )
   }

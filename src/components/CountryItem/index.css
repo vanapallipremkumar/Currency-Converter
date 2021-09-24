@@ -1,0 +1,34 @@
+.amount-list-item {
+  width: 100%;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  transition: 0.2s transform;
+}
+.amount-list-item:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 20px #00808055;
+}
+@media (min-width: 992px) {
+  .amount-list-item {
+    width: 45%;
+  }
+}
+.country-name {
+  color: #008080;
+  font-size: 24px;
+  font-family: 'Roboto';
+  margin-bottom: 10px;
+}
+.currency {
+  color: #008080;
+  font-family: 'Roboto';
+  margin-bottom: 10px;
+}
+.highlight-text {
+  color: #3caea3;
+}
