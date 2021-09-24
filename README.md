@@ -9,8 +9,9 @@ My Website Link: https://vpremcurrency.ccbp.tech/
 4) After installing the packages run the command "npm start" to start the server
 
 ## Language Details
-	i) React JS
-	ii) HTML, CSS
+	i)   React JS
+	ii)  HTML
+	iii) CSS
 
 ## Features
 	i)   Responsive Website
@@ -64,4 +65,4 @@ My Website Link: https://vpremcurrency.ccbp.tech/
 
 **The above API provides currency values for 160 countries.**
 
-**NOTE 1:** I provided an api key within the app. But it won't work for long due to it's api calling limit. Make sure to use your own API.
+**NOTE 3:** I provided an api key within the site. But it won't work for long due to it's api calling limit. Make sure to use your own API.
