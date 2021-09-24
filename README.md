@@ -1,10 +1,21 @@
 # Currency_Converter
 
+My Website Link: https://vpremcurrency.ccbp.tech/
+
 ## Installation
 1) Push/Copy git repository in to your project
 	i) git pull <repository> <branch>
 3) Run the command "npm install" to install all the packages mentioned in the "package.json"
 4) After installing the packages run the command "npm start" to start the server
+
+## Language Details
+	i) React JS
+	ii) HTML, CSS
+
+## Features
+	i)   Responsive Website
+	ii)  Easy to use/understand
+	iii) Can be signin with google gmail account.
 
 ## Authentication Page
 ## Accessible Routes
@@ -13,6 +24,7 @@
 3) /forgot-password
 **NOTE 1:** You can use your browser navigations to go backward or forward between above mentioned routes.
 
+	
 ### Signin Page
 	i)   Here you can login with your **gmail** or by **creating the new account**.
 	ii)  For Created users user details will be **stored** with in the browsers **localStorage**.
@@ -36,7 +48,12 @@
 
 ### Home Page
 	**NOTE 2:** If you did not logged and use the home route path to enter, the page will redirect to login page itself.
-	i)  Initally page will be loaded with all the 160 countries currencies according to 1 UAE Dirham.
+	i)   Initally page will be loaded with all the 160 countries currencies according to 1 UAE Dirham.
+	ii)  You can search the country details by using their name, currency name, or amount.
+	iii) All the countries are in alphabetical order with respect to the country codes.
+	iv)  We can convert 1 country value to another country by changing the selection options.
+	v)   We can change API key without changing the code by entering the api key in to api key input field.
+	vi)  We can logout from the page. Once you click logout, you will be redirected to signin page. You can't go backward to home page.
 
 ## API key
 
