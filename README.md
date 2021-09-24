@@ -23,6 +23,7 @@ My Website Link: https://vpremcurrency.ccbp.tech/
 1) /signin
 2) /signup
 3) /forgot-password
+
 **NOTE 1:** You can use your browser navigations to go backward or forward between above mentioned routes.
 
 	
@@ -48,7 +49,8 @@ My Website Link: https://vpremcurrency.ccbp.tech/
 	iv) Once you change the password, you will be redirected to signin page.
 
 ### Home Page
-	**NOTE 2:** If you did not logged and use the home route path to enter, the page will redirect to login page itself.
+**NOTE 2:** If you did not logged and use the home route path to enter, the page will redirect to login page itself.
+
 	i)   Initally page will be loaded with all the 160 countries currencies according to 1 UAE Dirham.
 	ii)  You can search the country details by using their name, currency name, or amount.
 	iii) All the countries are in alphabetical order with respect to the country codes.
