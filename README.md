@@ -39,10 +39,11 @@
 
 ## API key
 
-  **API website:** https://app.exchangerate-api.com
-  Above API gives us 1500 free api callings each month.
-  You can login with your google mail or by creating new account to get a free api key.
-  Instructions will be provided with in the website.
+  1) **API website:** https://app.exchangerate-api.com
+  2) Above API gives us 1500 free api callings each month.
+  3) You can login with your google mail or by creating new account to get a free api key.
+  4) Instructions will be provided with in the website.
+
 **The above API provides currency values for 160 countries.**
 
 **NOTE 1:** I provided an api key within the app. But it won't work for long due to it's api calling limit. Make sure to use your own API.
