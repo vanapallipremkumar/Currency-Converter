@@ -4,8 +4,8 @@ My Website Link: https://vpremcurrency.ccbp.tech/
 
 ## Installation
 1) Push/Copy git repository into your project
+
 	command> git pull https://github.com/vanapallipremkumar/Currency-Converter main
-	
 3) Run the command "npm install" to install all the packages mentioned in the "package.json"
 4) After installing the packages run the command "npm start" to start the server
 
