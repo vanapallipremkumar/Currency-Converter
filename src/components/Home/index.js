@@ -99,7 +99,7 @@ class Home extends Component {
   onChangeAmount = event => this.setState({amount: event.target.value})
 
   onClickConvert = () =>
-    this.setState({pageStatus: status.loading}, this.loadData)
+    this.setState({pageStatus: status.loading, searchValue: ''}, this.loadData)
 
   renderCountriesAmountsPage = () => {
     const {pageStatus} = this.state
