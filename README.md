@@ -19,7 +19,7 @@ My Website Link: https://vpremcurrency.ccbp.tech/
 	iii) Can be signin with google gmail account.
 
 ## Authentication Routes
-## Accessible Routes
+### Accessible Routes
 1) /signin
 2) /signup
 3) /forgot-password
