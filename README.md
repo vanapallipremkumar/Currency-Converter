@@ -2,8 +2,9 @@
 
 ## Installation
 1) Push/Copy git repository in to your project
-2) Run the command "npm install" to install all the packages mentioned in the "package.json"
-3) After installing the packages run the command "npm start" to start the server
+	i) git pull <repository> <branch>
+3) Run the command "npm install" to install all the packages mentioned in the "package.json"
+4) After installing the packages run the command "npm start" to start the server
 
 ## Authentication Page
 ## Accessible Routes
