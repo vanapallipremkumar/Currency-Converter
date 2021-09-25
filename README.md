@@ -29,6 +29,7 @@ My Website Link: https://vpremcurrency.ccbp.tech/
 **NOTE 1:** You can use your browser navigation to go backward or forward between the above-mentioned routes.
 
 ### Signin Route
+![Screenshot (40)](https://user-images.githubusercontent.com/43847835/134758772-175f5e7d-c344-41cf-83ad-3df844e7a608.png)
 
     . Here you can log in by **creating the new account**.
     . For Created users user details will be **stored** within the browsers **localStorage**.
@@ -39,6 +40,8 @@ My Website Link: https://vpremcurrency.ccbp.tech/
     . If you log in to the home Route you won't be redirected to the sign in Route until either you log out or clearing to browser cookies.
 
 ### sign up Route
+![Screenshot (41)](https://user-images.githubusercontent.com/43847835/134758774-50881896-2ced-4235-af32-247fc80afe43.png)
+
 
     . Here you can create a new account by mentioning a new username, password, date of birth.
     . If the username is already assigned to another account, you will be notified with an error.
@@ -46,6 +49,8 @@ My Website Link: https://vpremcurrency.ccbp.tech/
     . When we create the new account, the password, and date of birth will be encrypted and stored in localStorage.
 
 ### Forgot Password
+![Screenshot (42)](https://user-images.githubusercontent.com/43847835/134758779-abea2dad-1559-4a1c-b932-4dad20253b7d.png)
+
 
     . Here you can reset the password using your username and your date of birth.
     . If you provide any invalid details, you will be notified by an error message.
@@ -53,6 +58,7 @@ My Website Link: https://vpremcurrency.ccbp.tech/
     . Once you change the password, you will be redirected to the sign in Route.
 
 ## Home Route
+![Screenshot (43)](https://user-images.githubusercontent.com/43847835/134758785-eb256abb-5116-4268-b490-38531659115b.png)
 
 **NOTE 2:** If you did not log in and use the home route path to enter, the
 Route will redirect to the login Route itself.
