@@ -3,6 +3,7 @@ import Cookies from 'js-cookie'
 import Loader from 'react-loader-spinner'
 import 'react-loader-spinner/dist/loader/ThreeDots'
 import {BiError} from 'react-icons/bi'
+import jwt from 'jsonwebtoken'
 
 import CountryItem from '../CountryItem'
 import SelectCountries from '../SelectCountries'
@@ -28,7 +29,39 @@ class Home extends Component {
   }
 
   componentDidMount() {
+    this.checkJwtToken()
     this.loadData()
+  }
+
+  // To verify jwt token is valid or not
+  checkJwtToken = () => {
+    const cyJwtToken = Cookies.get('cy_jwt_token')
+    if (cyJwtToken === undefined) {
+      this.logOutFromPage()
+    }
+    const userNotFound = jwt.verify(
+      cyJwtToken,
+      'CODEYOUNGSERCRETCODE',
+      (error, payload) => {
+        const usersData = localStorage.getItem('code_young_users')
+        if (error || usersData === null) {
+          return true
+        }
+        const {username} = payload
+        const usersList = JSON.parse(usersData)
+        const userDetails = usersList.find(user => user.username === username)
+        return userDetails === undefined
+      },
+    )
+    if (userNotFound) {
+      this.logOutFromPage()
+    }
+  }
+
+  logOutFromPage = () => {
+    Cookies.remove('cy_jwt_token')
+    const {history} = this.props
+    history.replace('/signin')
   }
 
   getApiUrl = () => {
@@ -75,12 +108,6 @@ class Home extends Component {
     } else {
       this.setState({pageStatus: status.failed})
     }
-  }
-
-  onclickLogout = () => {
-    Cookies.remove('cy_jwt_token')
-    const {history} = this.props
-    history.replace('/signin')
   }
 
   getCountryDetailsByCode = countryCode =>
@@ -182,12 +209,6 @@ class Home extends Component {
     )
   }
 
-  onClickLogout = () => {
-    Cookies.remove('cy_jwt_token')
-    const {history} = this.props
-    history.replace('/signin')
-  }
-
   renderCountryAmounts = () => {
     const {countriesAmounts, searchValue} = this.state
     const showSearchBar = countriesAmounts.length !== 1
@@ -217,11 +238,10 @@ class Home extends Component {
   }
 
   render() {
+    // if "cy_jwt_token" cookie not found
     if (Cookies.get('cy_jwt_token') === undefined) {
-      const {history} = this.props
-      history.replace('/signin')
+      this.logOutFromPage()
     }
-
     const {amount} = this.state
     // JSX
     return (
@@ -232,13 +252,13 @@ class Home extends Component {
           onChangeToCountry={this.onChangeToCountry}
           onChangeAmount={this.onChangeAmount}
           onClickConvert={this.onClickConvert}
-          onClickLogout={this.onClickLogout}
+          onClickLogout={this.logOutFromPage}
         />
         <div className="api-input-result-container">
           <button
             className="large-device-logout-button"
             type="button"
-            onClick={this.onClickLogout}
+            onClick={this.logOutFromPage}
           >
             Logout
           </button>

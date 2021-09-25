@@ -5,8 +5,6 @@ import Cookies from 'js-cookie'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 
-import GoogleLogin from 'react-google-login'
-
 // import react icons
 import {FaUserCircle} from 'react-icons/fa'
 import {BsFillShieldLockFill} from 'react-icons/bs'
@@ -119,12 +117,6 @@ class SignIn extends Component {
     }))
   }
 
-  responseGoogle = response => {
-    const {tokenObj} = response
-    const idToken = tokenObj.id_token
-    this.setCookieAndRedirect(idToken)
-  }
-
   render() {
     if (Cookies.get('cy_jwt_token') !== undefined) {
       return <Redirect to="" />
@@ -204,13 +196,6 @@ class SignIn extends Component {
               </button>
             </Link>
           </div>
-          <GoogleLogin
-            className="google-sign-in-button"
-            clientId="831074996654-47vh0tssqrn99sc8bbii0c77vjr3db2j.apps.googleusercontent.com"
-            buttonText="Sign in with Google"
-            onSuccess={this.responseGoogle}
-            cookiePolicy="single_host_origin"
-          />
         </form>
       </div>
     )

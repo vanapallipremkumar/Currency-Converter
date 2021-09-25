@@ -1,21 +1,11 @@
 {
-  "short_name": "app_short_name",
-  "name": "App_name",
+  "short_name": "currency",
+  "name": "Currency Converter",
   "icons": [
     {
-      "src": "img/favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "src": "img/currency.png",
+      "sizes": "64x64",
       "type": "image/x-icon"
-    },
-    {
-      "src": "img/logo192.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "img/logo512.png",
-      "type": "image/png",
-      "sizes": "512x512"
     }
   ],
   "start_url": ".",
