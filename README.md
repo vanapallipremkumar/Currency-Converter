@@ -73,7 +73,7 @@ Route will redirect to the login Route itself.
 
 ## API key
 
-	. **API website:** https://app.exchangerate-api.com
+	. API website: https://app.exchangerate-api.com
 	. Above API gives us 1500 free API callings each month
 	. You can log in with your google mail or by creating a new account to get a free API key
 	. Instructions will be provided on the above website.
